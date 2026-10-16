@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1112" />
+    <meta name="description" content="Build and run deterministic, controlled AI workflows." />
+    <title>Open Agent Studio</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="stylesheet" href="/static/studio.css" />
+    <link rel="stylesheet" href="/static/auth.css" />
+    <link rel="stylesheet" href="/static/agents.css" />
+    <script src="/static/studio.js" defer></script>
+  </head>
+  <body>
+    <section id="auth-screen" class="auth-screen" aria-labelledby="auth-heading">
+      <form id="auth-form" class="auth-card" novalidate>
+        <div class="brand"><span class="brand-mark">O</span><span>open agent<span class="brand-light">studio</span></span></div>
+        <div class="eyebrow">LOCAL-FIRST WORKSPACE</div>
+        <h1 id="auth-heading">Loading secure workspace…</h1>
+        <p id="auth-description">Checking local account setup.</p>
+        <label class="field-label" for="auth-email">Email</label>
+        <input id="auth-email" class="text-input" type="email" autocomplete="username" required maxlength="254" />
+        <label class="field-label" for="auth-password">Password</label>
+        <input id="auth-password" class="text-input" type="password" autocomplete="current-password" required minlength="12" maxlength="256" />
+        <div id="workspace-name-row">
+          <label class="field-label" for="auth-workspace">Workspace name</label>
+          <input id="auth-workspace" class="text-input" value="My workspace" maxlength="80" />
+        </div>
+        <p id="auth-error" class="error-message" role="status" aria-live="polite"></p>
+        <button id="auth-submit" class="button primary" type="submit" disabled>Continue</button>
+        <small>Demo workflows run locally and require no paid model credentials.</small>
+      </form>
+    </section>
+    <div class="shell" id="studio-shell" hidden>
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="/" aria-label="Open Agent Studio home"><span class="brand-mark">O</span><span>open agent<span class="brand-light">studio</span></span></a>
+        <div class="workspace-label">WORKSPACE</div>
+        <button class="workspace-switch" type="button" aria-label="Current workspace"><span class="workspace-dot"></span> Local demo <span class="chevron">⌄</span></button>
+        <nav class="nav-list">
+          <a id="workflow-nav" class="nav-item active" href="#studio" data-page="workflow"><span class="nav-icon">◈</span>Workflow studio</a>
+          <a id="agents-nav" class="nav-item" href="#agents" data-page="agents"><span class="nav-icon">◉</span>Agents</a>
+          <a class="nav-item muted" href="#runs" aria-disabled="true"><span class="nav-icon">≋</span>Runs &amp; traces <span class="coming">Soon</span></a>
+          <a class="nav-item muted" href="#tools" aria-disabled="true"><span class="nav-icon">⌘</span>Tool registry <span class="coming">Soon</span></a>
+        </nav>
+        <div class="sidebar-bottom"><div class="status-card"><span class="online-dot"></span><div><strong>Local runtime</strong><small>Demo mode · no API key</small></div></div><div class="user-chip"><span class="avatar">D</span><span><strong id="user-name">Local owner</strong><small id="user-email">Signed in</small></span><button id="logout-button" class="logout-button" type="button">Sign out</button></div></div>
+      </aside>
+
+      <main id="studio" class="main">
+        <header class="topbar"><div class="crumb">Workspace <span>/</span> <strong>Workflow studio</strong></div><div class="top-actions"><span class="runtime-pill"><i></i> API connected</span><button class="icon-button" type="button" aria-label="Help">?</button></div></header>
+        <div class="content">
+          <section id="agents-page" class="agents-page" hidden aria-labelledby="agents-heading">
+            <div class="agents-heading">
+              <div><div class="eyebrow">AGENT CONFIGURATION</div><h1 id="agents-heading">Agents</h1><p>Create versioned local agent profiles. Provider calls and executable tools are not available in this prototype.</p></div>
+              <button id="new-agent-button" class="button secondary" type="button">New agent</button>
+            </div>
+            <div class="agents-grid">
+              <section class="panel agent-list-panel" aria-labelledby="agent-list-heading">
+                <div class="panel-header"><div><div class="eyebrow small">WORKSPACE</div><h2 id="agent-list-heading">Saved agents</h2></div></div>
+                <div id="agent-list" class="agent-list" aria-live="polite"><p class="empty-run">No agents yet.</p></div>
+              </section>
+              <section class="panel agent-editor" aria-labelledby="agent-form-heading">
+                <div class="panel-header"><div><div class="eyebrow small">DETERMINISTIC PROFILE</div><h2 id="agent-form-heading">New agent</h2></div><span id="agent-version" class="run-badge idle">DRAFT</span></div>
+                <form id="agent-form">
+                  <label class="field-label" for="agent-name">Name</label><input id="agent-name" class="text-input" maxlength="80" required />
+                  <label class="field-label" for="agent-instructions">Instructions</label><textarea id="agent-instructions" class="text-input agent-instructions" maxlength="4000" rows="6" placeholder="Describe the agent's purpose."></textarea>
+                  <div class="agent-capabilities"><strong>Provider</strong><span>Deterministic demo · no external model calls</span><strong>Executable tools</strong><span>None registered · allowlist is empty by default</span><strong>Memory</strong><span>Disabled in this prototype</span></div>
+                  <p id="agent-message" class="agent-message" role="status" aria-live="polite"></p>
+                  <div class="agent-actions"><button id="agent-save" class="button primary" type="submit">Create agent</button><button id="agent-archive" class="button secondary" type="button" hidden>Archive</button></div>
+                </form>
+                <div class="agent-history"><h3>Configuration versions</h3><div id="agent-versions">Save an agent to see version history.</div></div>
+              </section>
+            </div>
+          </section>
+          <section id="workflow-page">
+          <section id="workflow-heading" class="page-heading"><div><div class="eyebrow"><span class="eyebrow-mark">✳</span> AGENT DEVELOPMENT ENVIRONMENT</div><h1>Workflow studio</h1><p>Design a workflow, validate its path, then run it in a bounded local demo.</p></div><div class="heading-actions"><button id="reset-button" class="button secondary" type="button">↺ <span>Reset demo</span></button><button id="save-button" class="button secondary" type="button">Save workflow</button><button id="validate-button" class="button secondary" type="button">✓ <span>Validate</span></button><button id="run-button" class="button primary" type="button"><span class="play">▶</span> Run workflow</button></div></section>
+
+          <div class="workspace-grid">
+            <section class="canvas-panel panel" aria-labelledby="canvas-title">
+              <div class="panel-toolbar"><div><span id="canvas-title" class="panel-title">Untitled workflow</span><span id="save-state" class="save-state"><i></i> Unsaved draft</span></div><div class="canvas-tools"><button type="button" aria-label="Zoom out">−</button><span>100%</span><button type="button" aria-label="Zoom in">+</button><span class="tool-divider"></span><button type="button" aria-label="Fit canvas">⛶</button></div></div>
+              <div class="canvas" aria-label="Workflow graph preview">
+                <div class="canvas-grid"></div>
+                <svg class="connections" viewBox="0 0 720 430" preserveAspectRatio="none" aria-hidden="true"><path d="M240 115 C300 115 300 215 360 215"/><path d="M490 215 C550 215 550 315 610 315"/><circle cx="300" cy="165" r="3"/><circle cx="550" cy="265" r="3"/></svg>
+                <article class="node node-input"><div class="node-top"><span class="node-icon input-icon">↳</span><span class="node-category">TRIGGER</span><span class="node-menu">···</span></div><h3>Input</h3><p>Start with a number</p><div class="node-value"><span>value</span><code id="input-value">7</code></div><span class="port port-right" aria-hidden="true"></span></article>
+                <article class="node node-multiply"><span class="port port-left" aria-hidden="true"></span><div class="node-top"><span class="node-icon tool-icon">×</span><span class="node-category">TRANSFORM</span><span class="node-menu">···</span></div><h3>Multiply</h3><p>Multiply by a factor</p><div class="node-value"><span>factor</span><code id="factor-value">3</code></div><span class="port port-right" aria-hidden="true"></span></article>
+                <article class="node node-output"><span class="port port-left" aria-hidden="true"></span><div class="node-top"><span class="node-icon output-icon">↗</span><span class="node-category">OUTPUT</span><span class="node-menu">···</span></div><h3>Result</h3><p>Return final value</p><div class="node-value"><span>result</span><code id="result-value">—</code></div></article>
+                <div class="canvas-hint"><span>⠿</span> Graph preview <span class="hint-sep">·</span> Linear execution path</div>
+              </div>
+              <footer class="canvas-footer"><span><i class="tiny-dot"></i> 3 nodes <span class="footer-sep">·</span> 2 connections</span><span class="mono">Workflow v0.1 <span class="footer-sep">·</span> Not saved</span></footer>
+            </section>
+
+            <aside class="side-column">
+              <section class="panel config-panel"><div class="panel-header"><div><div class="eyebrow small">WORKFLOW CONFIG</div><h2>Run settings</h2></div><button class="icon-button small-icon" type="button" aria-label="More run settings">···</button></div>
+                <label class="field-label" for="saved-workflows">Saved workflows</label><select id="saved-workflows" class="text-input"><option value="">New workflow</option></select><label class="field-label" for="workflow-name">Workflow name</label><input id="workflow-name" class="text-input" value="Number transformer" maxlength="80" />
+                <label class="field-label" for="input-number">Input value</label><div class="input-wrap"><input id="input-number" class="text-input" type="number" value="7" /><span class="field-unit">NUMBER</span></div>
+                <label class="field-label" for="factor-number">Multiply factor</label><div class="input-wrap"><input id="factor-number" class="text-input" type="number" value="3" /><span class="field-unit">NUMBER</span></div>
+                <div class="config-note"><span>ⓘ</span><p>Runs use deterministic local tools. No external model calls, credentials, or costs.</p></div>
+              </section>
+              <section class="panel run-panel"><div class="run-header"><div><div class="eyebrow small">LATEST EXECUTION</div><h2 id="run-title">Ready to run</h2></div><span id="run-badge" class="run-badge idle">IDLE</span></div><div class="run-body" id="run-output"><div class="empty-run"><div class="empty-icon">⌁</div><strong>No runs yet</strong><span>Execute the workflow to see node results and timing here.</span></div></div></section>
+            </aside>
+          </div>
+          </section>
+          <footer class="page-footer"><span><span class="footer-brand">open agent studio</span> <span class="footer-sep">·</span> Local workspace · Runs saved on this device</span><span>Built for transparency <span class="heart">♥</span></span></footer>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
