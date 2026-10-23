@@ -2,6 +2,22 @@
 
 Open Agent Studio is an open-source, local-first workflow studio prototype. The current demonstrator supports a single local owner, one workspace, saved linear workflows, and deterministic `input → multiply → output` execution with persisted run results. It requires no paid model credentials. **It is not yet the full MVP or suitable for shared/network deployment.**
 
+Repository: https://github.com/0xyz-exe/OpenAgentStudio
+
+## Screenshots
+
+### Studio Canvas & Workflow Builder
+![Studio builder](docs/screenshots/01_studio_builder.png)
+
+### Execution Traces & Run Results
+![Execution runs](docs/screenshots/02_execution_runs.png)
+
+### Agent Profile Configuration
+![Agent configuration](docs/screenshots/03_agent_config.png)
+
+### Local Workspace Settings
+![Workspace settings](docs/screenshots/04_workspace.png)
+
 ## Current status
 
 - **Implemented and tested:** local FastAPI service and responsive static UI; one-time local owner account; PBKDF2 password hashes; opaque server-side sessions; HttpOnly/SameSite cookies and CSRF/origin checks; workspace-scoped SQLite; versioned agent profiles (CRUD/archive) with a deterministic-only provider setting and empty tool allowlist; save/update/select/execute workflows; bounded deterministic `input → multiply → output`; no provider key required.
