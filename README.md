@@ -6,17 +6,25 @@ Repository: https://github.com/0xyz-exe/OpenAgentStudio
 
 ## Screenshots
 
-### Studio Canvas & Workflow Builder
-![Studio builder](docs/screenshots/01_studio_builder.png)
+### 1. Studio Canvas & Workflow Builder
+Kanvas visual perancangan alur kerja (*workflow builder*) menyediakan antarmuka interaktif berbasis graf node untuk menyusun alur eksekusi deterministik secara modular, menampilkan node Trigger Input, Transform Multiply, dan Output Result yang saling terhubung melalui koneksi kurva mulus, dilengkapi panel konfigurasi parameter alur kerja lokal di sisi kanan serta kontrol penyimpanan dan validasi skema alur.
 
-### Execution Traces & Run Results
-![Execution runs](docs/screenshots/02_execution_runs.png)
+![Studio Canvas & Workflow Builder](docs/screenshots/01_studio_builder.png)
 
-### Agent Profile Configuration
-![Agent configuration](docs/screenshots/03_agent_config.png)
+### 2. Execution Traces & Run Results
+Panel pelacakan eksekusi (*execution traces*) menyajikan hasil pemrosesan alur kerja secara terperinci dengan badge status `SUCCEEDED` berkode warna hijau, identifikasi run unik, ringkasan nilai keluaran akhir pada node Result, serta uraian dekomposisi keluaran langkah-demi-langkah per node (*start*, *scale*, dan *finish*) untuk memastikan transparansi dan verifikasi alur kerja lokal tanpa ketergantungan API pihak ketiga.
 
-### Local Workspace Settings
-![Workspace settings](docs/screenshots/04_workspace.png)
+![Execution Traces & Run Results](docs/screenshots/02_execution_runs.png)
+
+### 3. Agent Profile Configuration
+Antarmuka manajemen profil agen otonom memfasilitasi pembuatan dan pengelolaan agen lokal terversi (*Document Analysis Agent*, *Code Synthesis Agent*, dan *Security Triage Agent*), menyediakan editor instruksi sistem yang fleksibel, pengaturan kapabilitas deterministik terisolasi (tanpa panggilan model eksternal dan allowlist alat kosong secara *default*), serta panel riwayat versi konfigurasi lengkap dengan stempel waktu pembaruan.
+
+![Agent Profile Configuration](docs/screenshots/03_agent_config.png)
+
+### 4. Local Workspace Settings
+Gerbang autentikasi dan inisialisasi ruang kerja lokal (*local-first workspace*) mengamankan lingkungan pengujian dan eksekusi pada perangkat pengguna, mewajibkan pembuatan akun pemilik tunggal (*single-owner local account*) yang terproteksi enkripsi kata sandi PBKDF2 berulang, sesi cookie aman bertipe HttpOnly/SameSite, serta verifikasi token CSRF tanpa memerlukan transmisi data ke server eksternal.
+
+![Local Workspace Settings](docs/screenshots/04_workspace.png)
 
 ## Current status
 
